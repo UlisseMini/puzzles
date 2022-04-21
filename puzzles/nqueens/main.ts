@@ -9,7 +9,7 @@
 type Pos = [number, number];
 type Mutation = [Pos, Pos];
 
-class Queens {
+export class Queens {
   // TODO: change to map and combine x,y for perf on million x million boards.
   queens: Pos[];
   n: number;
@@ -20,12 +20,11 @@ class Queens {
   }
 
   toString() {
-    let rows: string[] = [];
-    for (let i = 0; i < this.n; i++) {
-      // TODO
-    }
-
-    return rows.join("\n");
+    let grid = Array(this.n)
+      .fill(null)
+      .map(() => Array(this.n).fill("."));
+    this.queens.forEach(([i, j]) => (grid[i][j] = "Q"));
+    return grid.map((row) => row.join(" ")).join("\n");
   }
 
   randomInit() {
@@ -48,7 +47,9 @@ class Queens {
     // I'm only using this as a heuristic, and attacking() = 0 has the same meaning.
 
     return (
-      q1[0] === q2[0] || q1[1] === q2[1] || q1[0] - q2[0] === q1[1] - q2[1]
+      q1[0] === q2[0] ||
+      q1[1] === q2[1] ||
+      Math.abs(q1[0] - q2[0]) === Math.abs(q1[1] - q2[1])
     );
   }
 
@@ -57,9 +58,10 @@ class Queens {
     // TODO: Cache this, and come up with something better then O(n^2)
 
     let numConflicts = 0;
-    for (let i = 0; i < this.n; i++) {
-      for (let j = i + 1; j < this.n; j++) {
+    for (let i = 0; i < this.queens.length; i++) {
+      for (let j = i + 1; j < this.queens.length; j++) {
         if (this.attacking(this.queens[i], this.queens[j])) {
+          // console.log(`attacking(${this.queens[i]}, ${this.queens[j]})`);
           numConflicts += 1;
         }
       }
