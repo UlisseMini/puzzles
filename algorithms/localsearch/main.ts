@@ -6,7 +6,7 @@ interface Instance<M> {
   conflicts(): number;
 
   // What mutations we can apply
-  mutations(): [M];
+  mutations(): M[];
 
   // Apply a mutation (mutating self)
   apply(mutation: M): void;
